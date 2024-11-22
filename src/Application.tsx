@@ -5,12 +5,24 @@ import { text } from './utils/constants';
 
 export const Application: React.FC = () => {
     const [activeIndex, setActiveIndex] = React.useState(0);
+    const prevIndexRef                  = React.useRef(0);
+
+    /** изменение активного индекса и сохранение значения предыдущего индекса */
+    const onChangeActiveItem = (index: number) => {
+        setActiveIndex((prev: number) => {
+            prevIndexRef.current = prev;
+            return index;
+        });
+    };
 
     /** поворот слайдера-карусели (изменение активного индекса периода)
      * @param direction - направление (1 - по часовой стрелке, -1 - против часовой стрелки)
      */
     const rotateCarousel = (direction: 1 | -1) => {
-        setActiveIndex((prevIndex: number) => (prevIndex + direction + text.periods.length) % text.periods.length);
+        setActiveIndex((prev: number) => {
+            prevIndexRef.current = prev;
+            return (prev + direction + text.periods.length) % text.periods.length;
+        });
     };
 
     return (
@@ -20,7 +32,11 @@ export const Application: React.FC = () => {
                     <div className="line-gradient" />
                     <h1>{text.title}</h1>
                 </div>
-                <CircularCarousel activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
+                <CircularCarousel
+                    activeIndex        = {activeIndex}
+                    onChangeActiveItem = {onChangeActiveItem}
+                    prevIndex          = {prevIndexRef.current}
+                />
                 <div className='pagination'>
                     <div className='carousel-navigation'>
                         <p>{`0${activeIndex + 1}/0${text.periods.length}`}</p>

@@ -7,7 +7,9 @@ export interface ISliderProps {
 /** пропсы компонента карусели-слайдера для изменения периода */
 export interface ICircularCarouselProps extends ISliderProps {
     /** изменение индекса выбранного периода */
-    setActiveIndex: (value: React.SetStateAction<number>) => void
+    onChangeActiveItem: (value: number) => void;
+    /** значение предыдущего индекса */
+    prevIndex         : number;
 }
 /** пропсы компонента анимированного счетчика даты */
 export interface IDateCounterProps {

@@ -7,10 +7,9 @@ import { ICircularCarouselProps } from '../@types/all';
 /** Реакт-компонент "Карусель-слайдер для изменения периода" 
  * @property ICircularCarouselProps
 */
-export const CircularCarousel: React.FC<ICircularCarouselProps> = ({ activeIndex, setActiveIndex }) => {
+export const CircularCarousel: React.FC<ICircularCarouselProps> = ({ activeIndex, onChangeActiveItem, prevIndex }) => {
     const items                             = text.periods;
     const carouselRef                       = React.useRef(null);
-    const prevIndexRef                      = React.useRef(0);
     const [currentPeriod, setCurrentPeriod] = React.useState({
         start: items[0].items[0].date,
         end  : items[0].items.at(-1).date
@@ -40,7 +39,7 @@ export const CircularCarousel: React.FC<ICircularCarouselProps> = ({ activeIndex
           ease           : 'power2.inOut',
           onStart        : () => {
               const title       = carousel.children[activeIndex]?.querySelector('.carousel-title'),
-                    prevTitle   = carousel.children[prevIndexRef?.current]?.querySelector('.carousel-title');
+                    prevTitle   = carousel.children[prevIndex]?.querySelector('.carousel-title');
               
               prevTitle &&
                   gsap.to(prevTitle, {
@@ -86,13 +85,6 @@ export const CircularCarousel: React.FC<ICircularCarouselProps> = ({ activeIndex
 
       return {from, to};
   };
-
-  const onChangeActiveItem = (index: number) => {
-      setActiveIndex(prev => {
-          prevIndexRef.current = prev;
-          return index;
-      })
-  }
 
   return (
       <div className="carousel-container">
